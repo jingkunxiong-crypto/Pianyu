@@ -59,11 +59,13 @@
 
 ### 安装包校验
 
-```text
-SHA-256  B68B3C076E482E423E90C08CF91DA88A8D121E2F1704A1E305B3020899C63785
-文件名   Pianyu-v1.0-preview.apk
-大小     19,921,823 bytes
+每个 GitHub Release 都会同时提供 `Pianyu-v1.0-preview.apk.sha256`。下载 APK 和校验文件后，可执行：
+
+```bash
+sha256sum -c Pianyu-v1.0-preview.apk.sha256
 ```
+
+Windows PowerShell 可执行 `Get-FileHash .\Pianyu-v1.0-preview.apk -Algorithm SHA256`，并与校验文件中的值比较。
 
 > 如果设备上已安装由不同证书签名的同包名版本，Android 会阻止覆盖安装。请先备份需要的数据并卸载旧版本，再安装此预览包。
 
@@ -97,7 +99,7 @@ Windows：
 
 ## 质量状态
 
-- Debug APK 构建通过。
+- Debug APK 构建通过；发布后由 GitHub Actions 重新测试并生成附件。
 - 27 个 JVM 单元测试通过，覆盖相册状态、照片库逻辑、编辑参数、滤镜二维码和权限状态。
 - 项目采用 Kotlin、Jetpack Compose、Material 3、CameraX 与 ZXing。
 
@@ -117,5 +119,4 @@ app/src/main/java/com/example/newandroidapp/
 - Snapseed 是可选的第三方应用，版权及服务由其权利人所有。
 - 本仓库尚处于预览阶段，欢迎通过 Issues 报告可复现的问题。
 - 发布历史见 [CHANGELOG.md](CHANGELOG.md)。
-
 
