@@ -1,0 +1,38 @@
+name: Build release assets
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-attach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release tag
+        run: |
+          git clone --depth 1 --branch "${{ github.event.release.tag_name }}" \
+            "https://github.com/${{ github.repository }}.git" .
+
+      - name: Confirm Java runtime
+        run: java -version
+
+      - name: Test and build installable preview APK
+        run: |
+          chmod +x gradlew
+          ./gradlew testDebugUnitTest assembleDebug
+
+      - name: Prepare release files
+        run: |
+          mkdir -p release-assets
+          cp app/build/outputs/apk/debug/app-debug.apk release-assets/Pianyu-v1.0-preview.apk
+          cd release-assets
+          sha256sum Pianyu-v1.0-preview.apk > Pianyu-v1.0-preview.apk.sha256
+
+      - name: Attach files to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" release-assets/* --clobber
+
